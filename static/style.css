@@ -1,0 +1,17 @@
+body {
+}
+
+.selected {
+    background: red;
+}
+
+a:link, a:visited, a:active { 
+    text-decoration: none;
+    color: blue;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+
