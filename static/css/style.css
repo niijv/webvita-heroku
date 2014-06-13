@@ -1,0 +1,19 @@
+body {
+    padding-top: 70px;
+}
+
+input[type="submit"] {
+    font-family: FontAwesome;
+    font-size: 1.3em;
+}
+
+.search {
+    border: none;
+    background-color: #f8f8f8;
+    position:relative;
+}
+
+.navbar-nav>li>form {
+    padding-top: 10px;
+}
+

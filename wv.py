@@ -9,11 +9,9 @@ from flask import Flask, request, session, redirect, url_for, abort, render_temp
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-#config
-app.secret_key= "very secret"
-app.debug = True
 
-#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+#config
+app.config.from_pyfile('wv.cfg')
 
 #db = SQLAlchemy(app)
 
