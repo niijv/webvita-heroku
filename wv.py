@@ -7,13 +7,18 @@ from __future__ import with_statement
 import os
 from flask import Flask, request, session, redirect, url_for, abort, render_template, flash
 from flask.ext.sqlalchemy import SQLAlchemy
+from passlib.apps import custom_app_context as pwd_context
+
+'''                 Config and Initialisation               '''
 
 app = Flask(__name__)
 
-#config
 app.config.from_pyfile('wv.cfg')
 
-#db = SQLAlchemy(app)
+db = SQLAlchemy(app)
+
+
+'''             Routing             '''
 
 @app.route('/index')
 def index():
@@ -102,20 +107,7 @@ def delete_blogpost():
         return redirect(url_for('show_blog'))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+'''             Login and Session Logic             '''
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -123,19 +115,20 @@ def login():
         error = None
         if request.method == 'POST':
             username = unicode(request.form['username'])
-            #check user in DB
-            '''
-            user = User.query.filter_by(username=userame).first()
+            user = User.query.filter_by(username=username).first()
+            
             if not user:
-                error = 'Invalid username or password.'
+                error = 'Invalid username or password'
             elif pwd_context.verify(request.form['password'], user.pw_hash):
-            ''' 
-            session['logged_in'] = True
-            session['user'] = request.form['username']
-            session.permanent = False
-            flash('Logged in.', 'info')
-            return redirect(url_for('dashboard'))
+                session['logged_in'] = True
+                session['user'] = user.username
+                session.permanent = False
+                flash('Logged in.', 'info')
+                return redirect(url_for('dashboard'))
+            else:
+                error = 'Invalid username or password'
         return render_template('login.html', error=error)
+
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
@@ -149,6 +142,9 @@ def logout():
     flash('Logged out.', 'info')
     return redirect(url_for('show_blog'))
 
+
+'''             Error Handling              '''
+
 @app.errorhandler(401)
 def unauthorized(e):
     return render_template('401.html'), 401
@@ -161,5 +157,36 @@ def forbidden(e):
 def page_not_found(e):
     return render_template('404.html'), 404
 
-if __name__ == '__main__':
+
+'''                 Database Models                 '''
+
+class User(db.Model):
+    user_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    pw_hash = db.Column(db.String(400))
+    email = db.Column(db.String(120), unique=True)
+    
+    def __init__(self, username, pw_hash, email):
+        self.username = username
+        self.pw_hash = pw_hash
+        self.email = email
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
+
+'''                 Database Setup             '''
+
+def db_setup(name, pw, email):
+
+    #currently for development
+    db.drop_all()
+    db.create_all()
+    admin = User(name, pwd_context.encrypt(pw), email)
+    db.session.add(admin)
+    db.session.commit()
     app.run()
+
+
+if __name__ == '__main__':
+    db_setup('Dummy', 'dummy', 'dummy@mail.com')
