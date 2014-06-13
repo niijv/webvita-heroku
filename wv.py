@@ -179,7 +179,7 @@ class User(db.Model):
 
 def db_setup(name, pw, email):
 
-    #currently for development
+    #currently for local development
     db.drop_all()
     db.create_all()
     admin = User(name, pwd_context.encrypt(pw), email)
