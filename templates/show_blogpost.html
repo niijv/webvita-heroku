@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<span> <a href="{{ url_for('show_blog') }}"> Back to Blog </a> </span>
+
+<div class='blogposts' >
+    <h2> {{ blogpost.title|safe }} </h2>
+        <article class='blogpost'>        
+            <div class='text'> {{ blogpost.text|safe }} </div>
+            <span class='post-info'>                
+                by <span class='author'> {{ blogpost.user.username|safe }} </span> - <span class='date'> {{ blogpost.posted.strftime('%Y-%m-%d')|safe }} </span>
+            </span>
+            <div class='tags'>
+            {% for tag in blogpost.tags %}
+                <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name|safe }}</a>
+            {% endfor %}
+            </div> 
+        </article>    
+    </li>
+</div>
+
+{% endblock %}

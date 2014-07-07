@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h2> My thoughts and writings </h2>
+<h2> Blogposts concerning {{ tag_name|safe }} </h2>
 
 <ul class='blogposts' >
 {% for blogpost in blogposts %}
@@ -15,7 +15,7 @@
             </span> 
             <div class='tags'>
             {% for tag in blogpost.tags %}
-                <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name }}</a>
+                <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name|safe }}</a>
             {% endfor %}
             </div>       
         </article>    

@@ -2,8 +2,25 @@
 
 {% block body %}
 
-<h2> Edit Blogposts </h2>
+<h2> Blogposts </h2>
 
-List of all blogposts for editing...
+<ul>
+{% for blogpost in blogposts %}
+
+    <li>
+        <article class='blogpost'>        
+            <h3><a href="{{ url_for('show_blogpost', blogpost_title=blogpost.title) }}">{{ blogpost.title|safe }}</a></h3>
+            <div class='edit-tasks'>
+                <a href="{{ url_for('edit_blogpost', blogpost_title=blogpost.title) }}"> Edit </a>
+                <a href="{{ url_for('delete_blogpost', blogpost_title=blogpost.title) }}"> Delete </a>
+            </div>
+        </article>
+        
+    </li>    
+    
+{% else % }
+    <li>No blogposts so far.</li>
+{% endfor %}
+</ul>
 
 {% endblock %}

@@ -2,8 +2,30 @@
 
 {% block body %}
 
-<h2> Create Blogpost </h2>
+{% if session.logged_in %}
 
-Form for creating blogpost....
+<form id="create" action="{{ url_for('add_blogpost') }}" method=post class="add-blogpost" accept-charset="utf-8" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Create a new blogpost</legend>
+        <ul>
+            <li> <label for="title">Title:</label>
+            <input type="text" name="title" size=80 />
+            </li>
+            
+            <li> <label for="text">Text:</label>
+            <textarea name="text" rows=20 cols=80 ></textarea>
+            </li>
+
+            <li> <label for="tags">Tags (separated by commas):</label>
+            <input type="text" name="tags" size=120 />
+            </li>            
+
+            <li><label for="submit"> </label>
+            <input type="submit" value="Submit"><input type="Reset" /> 
+            </li>
+        </ul>
+        </fieldset>
+
+{% endif %}
 
 {% endblock %}
