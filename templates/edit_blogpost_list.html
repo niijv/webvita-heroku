@@ -2,6 +2,8 @@
 
 {% block body %}
 
+{% if session.logged_in %}
+
 <h2> Blogposts </h2>
 
 <ul>
@@ -18,9 +20,11 @@
         
     </li>    
     
-{% else % }
+{% else %}
     <li>No blogposts so far.</li>
 {% endfor %}
 </ul>
+
+{% endif %}
 
 {% endblock %}

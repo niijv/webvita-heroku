@@ -9,7 +9,7 @@
         <article class='blogpost'>        
             <div class='text'> {{ blogpost.text|safe }} </div>
             <span class='post-info'>                
-                by <span class='author'> {{ blogpost.user.username|safe }} </span> - <span class='date'> {{ blogpost.posted.strftime('%Y-%m-%d')|safe }} </span>
+                by <span class='author'> {{ blogpost.user.realname|safe }} </span> - <span class='date'> {{ blogpost.posted.strftime('%Y-%m-%d')|safe }} </span>
             </span>
             <div class='tags'>
             {% for tag in blogpost.tags %}
