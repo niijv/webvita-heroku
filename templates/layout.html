@@ -20,7 +20,7 @@
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/font.css') }}">
 
-        <title>Webvita - Elias Zeitfogel</title>
+        <title>Elias Zeitfogel - Webvita </title>
     </head>
 
     <body>
@@ -36,8 +36,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li {% if request.path == '/' %} class="active" {% endif %}><a href="{{ url_for('show_blog') }}">Blog</a></li>
-                        <li {% if request.path == '/projects' %} class="active" {% endif %}><a href="{{ url_for('show_projects') }}">Projects</a></li>
-                        <li {% if request.path == '/cv' %} class="active" {% endif %}><a href="{{ url_for('show_cv') }}">CV</a></li>
+                        <li {% if request.path == '/references' %} class="active" {% endif %}><a href="{{ url_for('show_references') }}">References</a></li>
                         <li {% if request.path == '/about' %} class="active" {% endif %}><a href="{{ url_for('show_about') }}">About</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

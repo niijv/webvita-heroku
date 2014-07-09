@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% if session.logged_in %}
+
+<form id="create" action="{{ url_for('update_reference', reference_title=reference.title) }}" method=post class="edit-reference" accept-charset="utf-8" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Edit <a href="{{ url_for('show_references') }}">{{ reference.title|safe }}</a></legend>
+        <ul>
+            <li> <label for="title">Title:</label>
+            <input type="text" name="title" size=50 value="{{ reference.title|safe }}"/>
+            </li>
+
+            <li> <label for="timespan">Timespan:</label>
+            <input type="text" name="timespan" size=50 value="{{ reference.timespan|safe }}"/>
+            </li>  
+            
+            <li> <label for="text">Text:</label>
+            <textarea name="text" rows=20 cols=60 >{{ reference.text|safe }}</textarea>
+            </li>          
+
+            <li><label for="submit"> </label>
+            <input type="submit" value="Submit">
+            </li>
+        </ul>
+    </fieldset>
+</form>
+
+{% endif %}
+
+{% endblock %}

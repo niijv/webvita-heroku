@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+
+<h2> My projects and references </h2>
+
+<ul class='references' >
+{% for reference in references %}
+
+    <li>
+        <article class='reference'>        
+            <h3>{{ reference.title|safe }}</h3>
+            <span class='reference-info'> {{ reference.timespan|safe }} </span>
+            <div class='text'> {{ reference.text|safe }} </div>  
+        </article>    
+    </li>
+
+{% else %}
+<li> No references so far.</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

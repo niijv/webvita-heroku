@@ -35,17 +35,23 @@ def show_blog():
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in show_blog: ' + str(e)
         flash(error, 'error')
         abort(404)
 
-@app.route('/projects')
-def show_projects():
-    return render_template('show_projects.html')
+@app.route('/references')
+def show_references():
+    try:    
 
-@app.route('/cv')
-def show_cv():
-    return render_template('show_cv.html')
+        references = Reference.query.order_by('id desc').all()
+        return render_template('show_references.html', references=references)
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in show_references: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
 
 @app.route('/about')
 def show_about():
@@ -67,7 +73,7 @@ def dashboard():
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in dashboard: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -84,7 +90,7 @@ def show_blogpost(blogpost_title):
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in show_blogpost: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -99,7 +105,7 @@ def create_blogpost():
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+           error = 'Error in create_blogpost: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -111,7 +117,7 @@ def add_blogpost():
             abort(401)    
 
         title = unicode(request.form['title'])
-        if not is_title_unique(title):
+        if not is_blogpost_unique(title):
             flash('Title already exists. Please choose a different title for your blogpost.')
             return redirect(url_for('create_blogpost')) #TODO: send previous data
         
@@ -133,7 +139,7 @@ def add_blogpost():
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in add_blogpost: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -150,7 +156,7 @@ def edit_blogpost_list():
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in edit_blogpost_list: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -168,7 +174,7 @@ def edit_blogpost(blogpost_title):
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in edit_blogpost: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -180,7 +186,7 @@ def update_blogpost(blogpost_title):
             abort(401)    
 
         title = unicode(request.form['title'])
-        if title!=blogpost_title and not is_title_unique(title):
+        if title!=blogpost_title and not is_blogpost_unique(title):
             flash('Title already exists. Please choose a different title for your blogpost.')
             return redirect(url_for('edit_blogpost', blogpost_title=blogpost_title)) #TODO: send previous data
         
@@ -204,7 +210,7 @@ def update_blogpost(blogpost_title):
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in update_blogpost: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -225,7 +231,7 @@ def delete_blogpost(blogpost_title):
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in delete_blogpost: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -239,7 +245,134 @@ def show_tag(tag_name):
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in show_tag: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
+
+
+'''             References              '''
+
+@app.route('/references/create')
+def create_reference():
+    try:    
+
+        if not session.get('logged_in'):
+            abort(401)
+        return render_template('create_reference.html')   
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in create_reference: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
+
+@app.route('/references/add', methods=['GET', 'POST'])
+def add_reference():
+    try:
+
+        if not session.get('logged_in'):
+            abort(401)    
+
+        title = unicode(request.form['title'])
+        if not is_blogpost_unique(title):
+            flash('Title already exists. Please choose a different title for your reference.')
+            return redirect(url_for('create_reference')) #TODO: send previous data
+        
+        reference = Reference(title, unicode(request.form['text']), unicode(request.form['timespan']))
+        db.session.add(reference)       
+        db.session.commit()
+
+        flash('New reference has been added.')
+        return redirect(url_for('show_references'))
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in add_reference: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
+
+@app.route('/references/edit')
+def edit_reference_list():
+    try:    
+
+        if not session.get('logged_in'):
+            abort(401)
+
+        references = Reference.query.order_by('id desc').all()       
+        return render_template('edit_reference_list.html', references=references) 
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in edit_reference_list: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
+
+@app.route('/references/edit/<reference_title>')
+def edit_reference(reference_title):
+    try:    
+
+        if not session.get('logged_in'):
+            abort(401)
+
+        reference = Reference.query.filter_by(title=reference_title).first_or_404()    
+        return render_template('edit_reference.html', reference=reference)
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in edit_reference: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
+
+@app.route('/references/update/<reference_title>', methods=['GET', 'POST'])
+def update_reference(reference_title):
+    try:
+
+        if not session.get('logged_in'):
+            abort(401)    
+
+        title = unicode(request.form['title'])
+        if title!=reference_title and not is_reference_unique(title):
+            flash('Title already exists. Please choose a different title for your reference.')
+            return redirect(url_for('edit_reference', reference_title=reference_title)) #TODO: send previous data    
+        
+        old_reference = Reference.query.filter_by(title=reference_title).first_or_404()
+        old_reference.title = title
+        old_reference.text = unicode(request.form['text'])
+        old_reference.timespan = unicode(request.form['timespan'])
+        db.session.commit()
+
+        flash('Reference has been updated.')
+        return redirect(url_for('show_references'))          
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in update_reference: ' + str(e)
+        flash(error, 'error')
+        return redirect(url_for('show_blog'))
+
+@app.route('/references/delete/<reference_title>')
+def delete_reference(reference_title):
+    try:    
+
+        if not session.get('logged_in'):
+            abort(401)
+
+        reference = Reference.query.filter_by(title=reference_title).first_or_404()
+        db.session.delete(reference) #TODO: remove possible unused tags
+        db.session.commit()
+
+        flash('Reference has been deleted.')
+        return render_template('dashboard.html') 
+
+    except Exception, e:
+        error = 'An unexpected error occured. Try again later.'
+        if app.debug:
+            error = 'Error in delete_reference: ' + str(e)
         flash(error, 'error')
         return redirect(url_for('show_blog'))
 
@@ -269,7 +402,7 @@ def login():
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
         if app.debug:
-            error += '\n' + str(e)
+            error = 'Error in login: ' + str(e)
         return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -366,10 +499,30 @@ class Tag(db.Model):
     def __repr__(self):
         return '<Tag %r>' % self.name
 
+class Reference(db.Model):
+    id = db.Column(db.Integer, primary_key=True)   
+    title = db.Column(db.Unicode, unique=True)
+    text = db.Column(db.Unicode)
+    timespan = db.Column(db.Unicode)
+
+    def __init__(self, title, text, timespan):
+        self.title = title
+        self.text = text
+        self.timespan = timespan
+
+    def __repr__(self):
+        return '<Reference %r>' % self.title
+
 '''                 Helper Functions            '''
 
-def is_title_unique(title):
+def is_blogpost_unique(title):
     if Blogpost.query.filter_by(title=title).first():
+        return False
+    else:
+        return True
+
+def is_reference_unique(title):
+    if Reference.query.filter_by(title=title).first():
         return False
     else:
         return True
@@ -378,11 +531,11 @@ def is_title_unique(title):
 
 def db_setup(name, realname, pw, email):
     #currently for development
-    #db.drop_all()
-    #db.create_all()
-    #admin = User(name, realname, pwd_context.encrypt(pw), email)
-    #db.session.add(admin)
-    #db.session.commit()
+    db.drop_all()
+    db.create_all()
+    admin = User(name, realname, pwd_context.encrypt(pw), email)
+    db.session.add(admin)
+    db.session.commit()
     app.run()
 
 
