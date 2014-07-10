@@ -20,7 +20,7 @@
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/font.css') }}">
 
-        <title>Elias Zeitfogel - Webvita </title>
+        <title> {% block title %}Blog{% endblock %} | Elias Zeitfogel - Webvita </title>
     </head>
 
     <body>
@@ -31,7 +31,7 @@
                         <span class="sr-only">Toggle navigation</span>
                         <i class="fa fa-bars fa-2x"></i>
                     </button>
-                    <a class="navbar-brand" href="{{ url_for('show_blog') }}">Elias Zeitfogel</a>
+                    <a class="navbar-brand" href="{{ url_for('show_about') }}">Elias Zeitfogel</a>
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -43,7 +43,7 @@
                         <li>
                             <form id="search" action="{{ url_for('search') }}" method="POST" accept-charset="utf-8">
                                 <!--<label for="searchbar">Search this site:</label>-->
-                                <input type="text" name="searchterms">
+                                <input type="text" name="search">
                                 <!--<label for="submit" value="Search"></label>-->
                                 <input type="submit" class="search" value="&#xf002;">
                             </form> 
@@ -67,7 +67,7 @@
         </section>    
 
         <footer class="container">
-            &#169; <script>document.write(new Date().getFullYear())</script> Elias Zeitfogel (add mail)|{% if not session.logged_in %} <a href="{{ url_for('login') }}">Login</a> {% elif session.logged_in %} <a href="{{url_for('logout') }}">Logout</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> {% endif %}
+            &#169; <script>document.write(new Date().getFullYear())</script> Elias Zeitfogel | {% if not session.logged_in %} <a href="{{ url_for('login') }}">Login</a> {% elif session.logged_in %} <a href="{{url_for('logout') }}">Logout</a> | <a href="{{ url_for('dashboard') }}">Dashboard</a> {% endif %}
         </footer>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>

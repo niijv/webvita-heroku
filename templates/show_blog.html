@@ -2,28 +2,31 @@
 
 {% block body %}
 
-<h2> My thoughts and writings </h2>
+<div class="overview">
 
-<ul class='blogposts' >
 {% for blogpost in blogposts %}
 
-    <li>
-        <article class='blogpost'>        
-            <h3><a href="{{ url_for('show_blogpost', blogpost_title=blogpost.title) }}">{{ blogpost.title|safe }}</a></h3>
-            <span class='post-info'>
-                by <span class='author'> {{ blogpost.user.realname|safe }} </span> - <span class='date'> {{ blogpost.posted.strftime('%Y-%m-%d')|safe }} </span>
-            </span> 
-            <div class='tags'>
-            {% for tag in blogpost.tags %}
-                <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name }}</a>
-            {% endfor %}
-            </div>       
-        </article>    
-    </li>
+<article class="blogpost">   
+    <div class="date"> 
+            {{ blogpost.posted.strftime('%b %d, %Y')|safe }} 
+    </div>      
+    <h1><a href="{{ url_for('show_blogpost', blogpost_title=blogpost.title) }}">{{ blogpost.title|safe }}</a></h1>
+    <div class="subtitle"> 
+        <p>        
+            {{ blogpost.subtitle|safe }} 
+        </p>    
+    </div>            
+    <div class="tags">
+    {% for tag in blogpost.tags %}
+        <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name }}</a>
+    {% endfor %}
+    </div>       
+</article>    
 
 {% else %}
-<li> No posts so far.</li>
+No blogposts so far.
 {% endfor %}
-</ul>
+
+</div>
 
 {% endblock %}

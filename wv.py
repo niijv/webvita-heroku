@@ -5,10 +5,14 @@
 
 from __future__ import with_statement
 import os
-from flask import Flask, request, session, redirect, url_for, abort, render_template, flash
-from flask.ext.sqlalchemy import SQLAlchemy
-from passlib.apps import custom_app_context as pwd_context
 from datetime import datetime
+
+from flask import Flask, request, session, redirect, url_for, abort,\
+                  render_template, flash
+from flask.ext.sqlalchemy import SQLAlchemy
+
+from passlib.apps import custom_app_context as pwd_context
+
 
 '''                 Config and Initialisation               '''
 
@@ -118,8 +122,13 @@ def add_blogpost():
 
         title = unicode(request.form['title'])
         if not is_blogpost_unique(title):
-            flash('Title already exists. Please choose a different title for your blogpost.')
-            return redirect(url_for('create_blogpost')) #TODO: send previous data
+            flash('Title already exists. Please choose a different title ' + \
+                  'for your blogpost.')
+            # TODO: send previous data
+            return redirect(url_for('create_blogpost'))
+
+        subtitle = unicode(request.form['subtitle'])
+        short_title = unicode(request.form['short_title'])
         
         blogpost_tags = []
         tags = unicode(request.form['tags'])
@@ -129,7 +138,8 @@ def add_blogpost():
                 blogpost_tags.append(t)           
 
         user = User.query.filter_by(username=session['user']).first_or_404()
-        blogpost = Blogpost(user, title, unicode(request.form['text']), blogpost_tags, hidden=False)
+        blogpost = Blogpost(user, title, subtitle, short_title, unicode(request.form['text']), 
+                            blogpost_tags, hidden=False)
         db.session.add(blogpost)       
         db.session.commit()
 
@@ -169,7 +179,9 @@ def edit_blogpost(blogpost_title):
 
         blogpost = Blogpost.query.filter_by(title=blogpost_title).first_or_404()  
         tags = ', '.join([tag.name for tag in blogpost.tags])     
-        return render_template('edit_blogpost.html', blogpost=blogpost, tags=tags)
+        return render_template('edit_blogpost.html', 
+                               blogpost=blogpost, 
+                               tags=tags)
 
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
@@ -187,9 +199,15 @@ def update_blogpost(blogpost_title):
 
         title = unicode(request.form['title'])
         if title!=blogpost_title and not is_blogpost_unique(title):
-            flash('Title already exists. Please choose a different title for your blogpost.')
-            return redirect(url_for('edit_blogpost', blogpost_title=blogpost_title)) #TODO: send previous data
+            flash('Title already exists. Please choose a different title' + \
+                  ' for your blogpost.')
+            # TODO: send previous data
+            return redirect(url_for('edit_blogpost', 
+                                    blogpost_title=blogpost_title))
         
+        subtitle = unicode(request.form['subtitle'])
+        short_title = unicode(request.form['short_title'])
+
         blogpost_tags = []
         tags = unicode(request.form['tags'])
         for t in tags.split(','):
@@ -197,11 +215,14 @@ def update_blogpost(blogpost_title):
             if t:
                 blogpost_tags.append(t)           
         
-        old_blogpost = Blogpost.query.filter_by(title=blogpost_title).first_or_404()
-        old_blogpost.title = title
-        old_blogpost.text = unicode(request.form['text'])
-        old_blogpost.update_tags(blogpost_tags) #TODO: remove possible unused tags
-        old_blogpost.edited = datetime.utcnow()
+        old_bp = Blogpost.query.filter_by(title=blogpost_title).first_or_404()
+        old_bp.title = title    
+        old_bp.subtitle = subtitle
+        old_bp.short_title = short_title
+        old_bp.text = unicode(request.form['text'])
+        # TODO: remove possible unused tags        
+        old_bp.update_tags(blogpost_tags)
+        old_bp.edited = datetime.utcnow()
         db.session.commit()
 
         flash('Blogpost has been updated.')
@@ -239,8 +260,11 @@ def delete_blogpost(blogpost_title):
 def show_tag(tag_name):
     try:
 
-        blogposts = Blogpost.query.order_by('posted desc').filter(Blogpost.tags.any(name=tag_name)).all()
-        return render_template('show_tag_blogposts.html', tag_name=tag_name, blogposts=blogposts)
+        blogposts = Blogpost.query.order_by('posted desc')\
+                            .filter(Blogpost.tags.any(name=tag_name)).all()
+        return render_template('show_tag_blogposts.html', 
+                               tag_name=tag_name, 
+                               blogposts=blogposts)
     
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
@@ -276,10 +300,14 @@ def add_reference():
 
         title = unicode(request.form['title'])
         if not is_blogpost_unique(title):
-            flash('Title already exists. Please choose a different title for your reference.')
-            return redirect(url_for('create_reference')) #TODO: send previous data
+            flash('Title already exists. Please choose a different title' + \
+                  ' for your reference.')
+            # TODO: send previous data
+            return redirect(url_for('create_reference'))
         
-        reference = Reference(title, unicode(request.form['text']), unicode(request.form['timespan']))
+        reference = Reference(title, 
+                              unicode(request.form['text']), 
+                              unicode(request.form['timespan']))
         db.session.add(reference)       
         db.session.commit()
 
@@ -301,7 +329,8 @@ def edit_reference_list():
             abort(401)
 
         references = Reference.query.order_by('id desc').all()       
-        return render_template('edit_reference_list.html', references=references) 
+        return render_template('edit_reference_list.html', 
+                               references=references) 
 
     except Exception, e:
         error = 'An unexpected error occured. Try again later.'
@@ -317,7 +346,8 @@ def edit_reference(reference_title):
         if not session.get('logged_in'):
             abort(401)
 
-        reference = Reference.query.filter_by(title=reference_title).first_or_404()    
+        reference = Reference.query.filter_by(title=reference_title)\
+                             .first_or_404()    
         return render_template('edit_reference.html', reference=reference)
 
     except Exception, e:
@@ -336,10 +366,14 @@ def update_reference(reference_title):
 
         title = unicode(request.form['title'])
         if title!=reference_title and not is_reference_unique(title):
-            flash('Title already exists. Please choose a different title for your reference.')
-            return redirect(url_for('edit_reference', reference_title=reference_title)) #TODO: send previous data    
+            flash('Title already exists. Please choose a different title' + \
+                  ' for your reference.')
+            # TODO: send previous data
+            return redirect(url_for('edit_reference', 
+                                    reference_title=reference_title))    
         
-        old_reference = Reference.query.filter_by(title=reference_title).first_or_404()
+        old_reference = Reference.query.filter_by(title=reference_title)\
+                                 .first_or_404()
         old_reference.title = title
         old_reference.text = unicode(request.form['text'])
         old_reference.timespan = unicode(request.form['timespan'])
@@ -362,8 +396,9 @@ def delete_reference(reference_title):
         if not session.get('logged_in'):
             abort(401)
 
-        reference = Reference.query.filter_by(title=reference_title).first_or_404()
-        db.session.delete(reference) #TODO: remove possible unused tags
+        reference = Reference.query.filter_by(title=reference_title)\
+                             .first_or_404()
+        db.session.delete(reference)
         db.session.commit()
 
         flash('Reference has been deleted.')
@@ -436,7 +471,9 @@ class User(db.Model):
     realname = db.Column(db.String(120))
     pw_hash = db.Column(db.String(128))
     email = db.Column(db.String(120), unique=True)
-    blogposts = db.relationship('Blogpost', backref=db.backref('user', lazy='joined'), lazy='dynamic')
+    blogposts = db.relationship('Blogpost', 
+                                backref=db.backref('user', lazy='joined'), 
+                                lazy='dynamic')
     
     def __init__(self, username, realname, pw_hash, email):
         self.username = username
@@ -452,15 +489,20 @@ tags = db.Table('tags',
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
 )
 
+
 class Blogpost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.Unicode, unique=True)
+    subtitle = db.Column(db.Unicode)
+    short_title = db.Column(db.Unicode)
     text = db.Column(db.Unicode)
     posted = db.Column(db.DateTime)
     edited = db.Column(db.DateTime)
     hidden = db.Column(db.Boolean)
-    tags = db.relationship('Tag', secondary=tags, backref=db.backref('tags', lazy='dynamic'))
+    tags = db.relationship('Tag', 
+                           secondary=tags, 
+                           backref=db.backref('tags', lazy='dynamic'))
 
     def update_tags(self, tags):
         #TODO: remove unused tags
@@ -473,9 +515,12 @@ class Blogpost(db.Model):
                 tag_list.append(tag)
         self.tags = tag_list
 
-    def __init__(self, author, title, text, tags, posted=None, edited=None, hidden=True):
+    def __init__(self, author, title, subtitle, short_title, text, tags, 
+                 posted=None, edited=None, hidden=True):
         self.user_id = author.id        
         self.title = title
+        self.subtitle = subtitle
+        self.short_title = short_title
         self.text = text
         self.update_tags(tags)
         if posted is None:
@@ -489,6 +534,7 @@ class Blogpost(db.Model):
     def __repr__(self):
         return '<Blogpost %r>' % self.title
 
+
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, unique=True)
@@ -498,6 +544,7 @@ class Tag(db.Model):
 
     def __repr__(self):
         return '<Tag %r>' % self.name
+
 
 class Reference(db.Model):
     id = db.Column(db.Integer, primary_key=True)   

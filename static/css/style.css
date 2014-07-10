@@ -2,7 +2,35 @@ body {
     padding-top: 70px;
 }
 
-input[type="submit"] {
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Comic Neue', sans-serif;
+}
+
+.overview h1 {
+    font-size: 24px;
+}
+
+.overview h2 {
+    font-size: 20px;
+}
+
+.detailed h1 {
+    font-size: 32px;
+}
+
+.detailed h2 {
+    font-size: 24px;
+}
+
+h1.section-header {
+    color: grey; /* change to light grey */
+}
+
+.navbar-nav>li>form {
+    padding-top: 10px;
+}
+
+input[type="submit"].search {
     font-family: FontAwesome;
     font-size: 1.3em;
 }
@@ -13,7 +41,34 @@ input[type="submit"] {
     position:relative;
 }
 
-.navbar-nav>li>form {
-    padding-top: 10px;
+section.container {
+    margin-bottom: 40px;
+}
+
+.overview .date {
+    margin-top: 30px;
+    margin-bottom: -20px;
+}
+
+.overview .reference-info {
+    margin-top: 30px;
+    margin-bottom: -20px;
+}
+
+.detailed .date {
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+.tags {
+    float: right;
+}
+
+footer.container {
+    text-align: center;
+}
+
+@media (min-width: 768px) { 
+
 }
 

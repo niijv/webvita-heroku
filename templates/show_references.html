@@ -1,24 +1,25 @@
 {% extends "layout.html" %}
 
+{% block title %}References{% endblock %}
+
 {% block body %}
 
+<div class="overview">
 
-<h2> My projects and references </h2>
+<h1 class="section-header"> My projects and references </h1>
 
-<ul class='references' >
 {% for reference in references %}
 
-    <li>
-        <article class='reference'>        
-            <h3>{{ reference.title|safe }}</h3>
-            <span class='reference-info'> {{ reference.timespan|safe }} </span>
-            <div class='text'> {{ reference.text|safe }} </div>  
-        </article>    
-    </li>
+<article class="reference">   
+    <div class="reference-info"> {{ reference.timespan|safe }} </div>     
+    <h2>{{ reference.title|safe }}</h2>
+    <div class="text"> {{ reference.text|safe }} </div>  
+</article>    
 
 {% else %}
-<li> No references so far.</li>
+No references so far.
 {% endfor %}
-</ul>
+
+</div>
 
 {% endblock %}
