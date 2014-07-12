@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="overview">
+
+{% for blogpost in blogposts %}
+
+<article class="blogpost">   
+    <div class="date"> 
+            {{ blogpost.posted.strftime('%b %d, %Y')|safe }} 
+    </div>      
+    <h1><a href="{{ url_for('show_blogpost', blogpost_short_title=blogpost.short_title) }}">{{ blogpost.title|safe }}</a></h1>
+    <div class="subtitle"> 
+        <p>        
+            {{ blogpost.subtitle|safe }} 
+        </p>    
+    </div>            
+    <div class="tags">
+    {% for tag in blogpost.tags %}
+        <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name }}</a>
+    {% endfor %}
+    </div>       
+</article>    
+
+{% else %}
+No blogposts so far.
+{% endfor %}
+
+</div>
+
+{% endblock %}
