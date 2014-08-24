@@ -1,11 +1,11 @@
 # -*-coding: utf-8 -*-
-#!flask/bin/python
 
-from webvita import db
+from webvita import app, db
+
+#import flask.ext.whooshalchemy as whooshalchemy
 
 from datetime import datetime
 
-'''                 Database Models                 '''
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +33,7 @@ tags = db.Table('tags',
 
 
 class Blogpost(db.Model):
+    #__searchable__ = ['title', 'text_html', 'subtitle', 'short_title']
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     title = db.Column(db.Unicode, unique=True)
@@ -45,18 +46,19 @@ class Blogpost(db.Model):
     hidden = db.Column(db.Boolean)
     tags = db.relationship('Tag', 
                            secondary=tags, 
-                           backref=db.backref('tags', lazy='dynamic'))
+                           backref=db.backref('blogposts', lazy='dynamic'))
 
     def update_tags(self, tags):
-        #TODO: remove unused tags
-        tag_list = []
-        for t in tags:
-            tag = Tag.query.filter_by(name=t).first()
-            if not tag:                
-                tag_list.append(Tag(t))
-            else:
-                tag_list.append(tag)
-        self.tags = tag_list
+        to_add = set(tags)
+        for old_tag in list(self.tags):
+            if old_tag.name not in tags:
+                self.tags.remove(old_tag)
+            to_add.discard(old_tag.name)
+        for new_tag in to_add:
+            tag = Tag.query.filter_by(name=new_tag).first()
+            if tag is None:
+                tag = Tag(new_tag)
+            self.tags.append(tag)
 
     def __init__(self, author, title, subtitle, short_title, text_markdown,
                  text_html, tags, posted=None, edited=None, hidden=True):
@@ -77,8 +79,7 @@ class Blogpost(db.Model):
 
     def __repr__(self):
         return '<Blogpost %r>' % self.title
-
-
+       
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Unicode, unique=True)
@@ -102,7 +103,8 @@ class Reference(db.Model):
         self.text_markdown = text_markdown
         self.text_html = text_html
         self.timespan = timespan
-
+        
     def __repr__(self):
         return '<Reference %r>' % self.title
-        
+
+#whooshalchemy.whoosh_index(app, Blogpost)

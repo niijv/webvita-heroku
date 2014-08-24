@@ -2,16 +2,15 @@
    IMPLEMENTATION
    ========================================================================== */
 
-body {
+/*body {
     font-family: 'Comic Neue', sans-serif;
     font-weight: 300;
     font-size: 14px;
     line-height: 1.5;
-    /* Enable a font's kerning: http://stackoverflow.com/questions/15160897/font-feature-settings-what-is-the-correct-syntax */
     font-feature-settings: "kern";
     -moz-font-feature-settings: "kern";
     -webkit-font-feature-settings: "kern";
-}
+}*/
 
 
 /* 

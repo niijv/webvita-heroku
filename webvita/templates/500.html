@@ -1,0 +1,9 @@
+﻿{% extends "layout.html" %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block body %}
+<h1>500 - Internal Server Error</h1>
+<p>Something does not seem right at the moment, better...
+<p><a href="{{ url_for('show_blog') }}">...go somewhere nice</a>
+{% endblock %}

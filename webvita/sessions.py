@@ -1,5 +1,4 @@
 # -*-coding: utf-8 -*-
-#!flask/bin/python
 
 from webvita import app, db
 
@@ -12,33 +11,24 @@ from models import User
                   
 from passlib.apps import custom_app_context as pwd_context
 
-'''             Login and Session Logic             '''
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    try:
-
-        error = None
-        if request.method == 'POST':
-            username = unicode(request.form['username'])
-            user = User.query.filter_by(username=username).first()
-            if not user:
-                error = 'Invalid username or password'
-            elif pwd_context.verify(request.form['password'], user.pw_hash):
-                session['logged_in'] = True
-                session['user'] = user.username
-                session.permanent = False
-                flash('Logged in.', 'info')
-                return redirect(url_for('dashboard'))
-            else:
-                error = 'Invalid username or password'
-        return render_template('login.html', error=error)
-
-    except Exception, e:
-        error = 'An unexpected error occured. Try again later.'
-        if app.debug:
-            error = 'Error in login: ' + str(e)
-        return render_template('login.html', error=error)
+    error = None
+    if request.method == 'POST':
+        username = unicode(request.form['username'])
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            error = 'Invalid username or password'
+        elif pwd_context.verify(request.form['password'], user.pw_hash):
+            session['logged_in'] = True
+            session['user'] = user.username
+            session.permanent = False
+            flash('Logged in.', 'info')
+            return redirect(url_for('dashboard'))
+        else:
+            error = 'Invalid username or password'
+    return render_template('login.html', error=error)
 
 @app.route('/logout')
 def logout():

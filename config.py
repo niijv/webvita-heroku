@@ -1,3 +1,5 @@
+# -*-coding: utf-8 -*-
+#!flask/bin/python
 import os
 
 SECRET_KEY = "very secret"
@@ -11,4 +13,5 @@ else:
 
 #Openshift: 'OPENSHIFT_POSTGRESQL_DB_URL'
 #Heroku: 'DATABASE_URL'
+
 

@@ -4,15 +4,15 @@
 
 {% if session.logged_in %}
 
-<h2> Dashboard </h2>
+<h1 class="section-header"> Dashboard </h1>
 <div id="dashboard">
    <div id="blog">
-        <h3> Blog </h3>
+        <h2> Blog </h2>
         <div><a href="{{ url_for('create_blogpost') }}">Create</a></div>
         <div><a href="{{ url_for('edit_blogpost_list') }}">Edit</a></div>
     </div>
     <div id="references">
-        <h3> References </h3>
+        <h2> References </h2>
         <div><a href="{{ url_for('create_reference') }}">Create</a></div>
         <div><a href="{{ url_for('edit_reference_list') }}">Edit</a></div>
     </div>

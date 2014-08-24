@@ -1,9 +1,15 @@
 {% extends "layout.html" %}
 
+{% block title %}Search{% endblock %}
+
 {% block body %}
 
-<h3>Search Results</h3>
+<div class="overview">
 
-You searched for {{ terms }}. Full text search implementation is in progress and will be finished soon.
+<h2> Blogposts with: "{{ terms|safe }}" </h2>
+
+This feature is currently not implemented.
+
+</div>
 
 {% endblock %}

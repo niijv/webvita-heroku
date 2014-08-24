@@ -1,14 +1,11 @@
 # -*-coding: utf-8 -*-
-#!flask/bin/python
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
-'''                 Config and Initialisation               '''
-
 app = Flask(__name__)
 
-app.config.from_pyfile('wv.cfg')
+app.config.from_object('config')
 
 db = SQLAlchemy(app)
 

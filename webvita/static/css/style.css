@@ -1,29 +1,69 @@
 body {
     padding-top: 70px;
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.5;
+    font-size: 17px;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Comic Neue', sans-serif;
+    font-feature-settings: "kern";
+    -moz-font-feature-settings: "kern";
+    -webkit-font-feature-settings: "kern";
+}
+
+.navbar {
+    font-family: 'Comic Neue', sans-serif;
+    font-feature-settings: "kern";
+    -moz-font-feature-settings: "kern";
+    -webkit-font-feature-settings: "kern";
+    
+}
+
+.navbar-toggle {
+    padding: 0px 4px 0px 4px;
+    margin-bottom: 6px;
+}
+
+
+article h1, article h2 {
+    color: green;
+}
+
+.overview .blogpost h1 a {
+    color: green;
+}
+
+.overview .blogpost h1 a:hover, .overview .blogpost h2 a:focus {
+    color: black;
+}
+
+a {
+    color: darkred;
+}
+
+a:hover, a:focus {
+    color: black;
 }
 
 .overview h1 {
-    font-size: 24px;
+    font-size: 28px;
 }
 
 .overview h2 {
-    font-size: 20px;
-}
-
-.detailed h1 {
-    font-size: 32px;
-}
-
-.detailed h2 {
     font-size: 24px;
 }
 
+.detailed h1 {
+    font-size: 36px;
+}
+
+.detailed h2 {
+    font-size: 28px;
+}
+
 h1.section-header {
-    color: grey; /* change to light grey */
+    color: grey;
 }
 
 .navbar-nav>li>form {
@@ -39,6 +79,10 @@ input[type="submit"].search {
     border: none;
     background-color: #f8f8f8;
     position:relative;
+}
+
+form#search {
+    padding-left: 20px;
 }
 
 section.container {
@@ -62,13 +106,32 @@ section.container {
 
 .tags {
     float: right;
+    font-family: 'Comic Neue', sans-serif;
+    font-feature-settings: "kern";
+    -moz-font-feature-settings: "kern";
+    -webkit-font-feature-settings: "kern";
+}
+
+.tags a {
+    margin-left: 10px;
 }
 
 footer.container {
     text-align: center;
+    font-size: 12px;
+}
+
+footer.container a {
+    color: green;
+}
+
+footer.container a:hover, footer.container a:focus {
+    color: black;
 }
 
 @media (min-width: 768px) { 
-
+    .container {
+        max-width: 730px;
+    }
 }
 

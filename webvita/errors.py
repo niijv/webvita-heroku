@@ -1,11 +1,9 @@
 # -*-coding: utf-8 -*-
-#!flask/bin/python
 
 from webvita import app
 
 from flask import render_template
 
-'''             Error Handling              '''
 
 @app.errorhandler(401)
 def unauthorized(e):
@@ -18,4 +16,8 @@ def forbidden(e):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+    
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 500
 

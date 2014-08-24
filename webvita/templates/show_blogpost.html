@@ -12,7 +12,7 @@
     <h1> {{ blogpost.title|safe }} </h1>
     <div class="date"> {{ blogpost.posted.strftime('%B %d, %Y')|safe }} </div>        
     <div class="text"> {{ blogpost.text_html|safe }} </div>
-    <div class="tags">
+    <div class="tags"> Tags: 
     {% for tag in blogpost.tags %}
         <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name|safe }}</a>
     {% endfor %}

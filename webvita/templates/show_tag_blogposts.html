@@ -6,7 +6,7 @@
 
 <div class="overview">
 
-<h2> Posts about {{ tag_name|safe }} </h2>
+<h2> Blogposts on "{{ tag_name|safe }}" </h2>
 
 {% for blogpost in blogposts %}
 
@@ -20,7 +20,7 @@
             {{ blogpost.subtitle|safe }} 
         </p>    
     </div>            
-    <div class="tags">
+    <div class="tags"> Tags: 
     {% for tag in blogpost.tags %}
         <a href="{{ url_for('show_tag', tag_name=tag.name) }}">{{ tag.name }}</a>
     {% endfor %}
